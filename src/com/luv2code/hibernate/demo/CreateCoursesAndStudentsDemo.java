@@ -8,8 +8,9 @@ import com.luv2code.hibernate.demo.entity.Course;
 import com.luv2code.hibernate.demo.entity.Instructor;
 import com.luv2code.hibernate.demo.entity.InstructorDetail;
 import com.luv2code.hibernate.demo.entity.Review;
+import com.luv2code.hibernate.demo.entity.Student;
 
-public class GetCoursesAndReviewsDemo {
+public class CreateCoursesAndStudentsDemo {
 
 	public static void main(String[] args) {
 
@@ -20,6 +21,7 @@ public class GetCoursesAndReviewsDemo {
 				.addAnnotatedClass(InstructorDetail.class)
 				.addAnnotatedClass(Course.class)
 				.addAnnotatedClass(Review.class)
+				.addAnnotatedClass(Student.class)
 				.buildSessionFactory();
 		// create session
 		Session session = factory.getCurrentSession();
@@ -28,18 +30,33 @@ public class GetCoursesAndReviewsDemo {
 
 			// start a transaction
 			session.beginTransaction();
+
+	//		Course tempCourse=session.get(Course.class, 15);
 			
-			// get the course
-			int theId = 16; 
+			// create a course
+			Course tempCourse= new Course("Pacman - How to score One Milion Points");
+		//	session.delete(tempCourse);
+			//add some reviews
+
+			// save the course
+			System.out.println("\nsaving the course: ...");
+			session.save(tempCourse);
+			System.out.println("\nSaved the course: " + tempCourse);
 			
-			Course tempCourse= session.get(Course.class, theId);
+			// create the students
+			Student tempStudent1=new Student("John", "Doe","johny@luv2code.com");
+			Student tempStudent2=new Student("Mary", "Public","mary@luv2code.com");
 			
-			// print the course
-			System.out.println(tempCourse);
+			// add students to the course			
+			tempCourse.addStudent(tempStudent1);
+			tempCourse.addStudent(tempStudent2);
 			
-			// print the course reviews
-			System.out.println(tempCourse.getReviews());
-	
+			// save the students
+			System.out.println("\nSaving the students ...");
+			session.save(tempStudent1);
+			session.save(tempStudent2);
+			System.out.println("\nSaved students: "+ tempCourse.getStudents());
+			
 			// commit transaction
 			session.getTransaction().commit();
 
